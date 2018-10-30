@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello, World!" << endl;
+	cout << sizeof(int) << " " << sizeof(float) << endl;
 
 	return 0;
 }
