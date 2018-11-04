@@ -18,17 +18,12 @@ int main()
 	_itoa_s(a, b, 2);
 	cout << b << endl;
 
-	int c = 3;
-	int cc = c & 1;
-	c >>= 1;
-	int ccc = c & 1;
-	
+	int c = 7;
+
 	_itoa_s(c, b, 2);
 	cout << b << endl;
-	_itoa_s(cc, b, 2);
-	cout << b << endl;
-	_itoa_s(ccc, b, 2);
-	cout << b << endl;
+
+	cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
 
 	return 0;
 }
