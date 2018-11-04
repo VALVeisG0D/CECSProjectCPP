@@ -17,13 +17,22 @@ int main()
 
 	_itoa_s(a, b, 2);
 	cout << b << endl;
+	
+	int c = 0;
 
-	int c = 7;
+	//cout << (a >> 1) << endl;
 
-	_itoa_s(c, b, 2);
-	cout << b << endl;
+	for (int i = 0; i < 10; ++i)
+	{
+		
+		c++;
+		///_itoa_s(c, b, 2);
+		//cout << b << endl;
 
-	cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
+		cout << c << endl;
+		//cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
+		c >>= (2 * ((c & 1) & ((c >> 1) & 1)));
+	}
 
 	return 0;
 }
