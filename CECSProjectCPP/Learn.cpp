@@ -19,6 +19,7 @@ int main()
 	cout << b << endl;
 	
 	int c = 0;
+	int position = 0;
 
 	//cout << (a >> 1) << endl;
 
@@ -28,10 +29,13 @@ int main()
 		c++;
 		///_itoa_s(c, b, 2);
 		//cout << b << endl;
+		int change = ((c & 1) & ((c >> 1) & 1));
 
-		cout << c << endl;
+		cout << c << " " << change << endl;
 		//cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
-		c >>= (((c & 1) & ((c >> 1) & 1)) << 1);
+		c >>= (change << 1);
+		position += change;
+		cout << position << endl;
 	}
 
 	return 0;
