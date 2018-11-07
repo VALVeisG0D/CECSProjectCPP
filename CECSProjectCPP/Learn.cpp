@@ -18,7 +18,7 @@ int main()
 	_itoa_s(a, b, 2);
 	cout << b << endl;
 	
-	int c = 0;
+	int inertia = 0;
 	int position = 0;
 
 	//cout << (a >> 1) << endl;
@@ -26,14 +26,14 @@ int main()
 	for (int i = 0; i < 10; ++i)
 	{
 		
-		c++;
+		inertia++;
 		///_itoa_s(c, b, 2);
 		//cout << b << endl;
-		int change = ((c & 1) & ((c >> 1) & 1));
+		int change = ((inertia & 1) & ((inertia >> 1) & 1));
 
-		cout << c << " " << change << endl;
+		cout << inertia << " " << change << endl;
 		//cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
-		c >>= (change << 1);
+		inertia >>= (change << 1); // reset inertia to 0 when inertia reaches 3
 		position += change;
 		cout << position << endl;
 	}
