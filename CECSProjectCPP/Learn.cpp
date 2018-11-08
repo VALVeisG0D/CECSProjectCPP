@@ -38,5 +38,8 @@ int main()
 		cout << position << endl;
 	}
 
+	_itoa_s(-1, b, 2);
+	cout << (-1 >> 16) << endl;
+
 	return 0;
 }
