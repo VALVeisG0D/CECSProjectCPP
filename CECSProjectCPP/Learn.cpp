@@ -16,29 +16,26 @@ int main()
 	cout << sizeof(int) << " " << sizeof(float) << endl;
 
 	_itoa_s(a, b, 2);
-	cout << b << endl;
+	cout << b << endl << endl;
 	
 	int inertia = 0;
 	int position = 0;
-
-	//cout << (a >> 1) << endl;
+	int change = 0;
 
 	for (int i = 0; i < 10; ++i)
 	{
 		
 		inertia++;
-		///_itoa_s(c, b, 2);
-		//cout << b << endl;
-		int change = ((inertia & 1) & ((inertia >> 1) & 1));
+		change = ((unsigned)((1 << 31) & (2 - inertia)) >> 31);
 
-		cout << inertia << " " << change << endl;
-		//cout << (c & 1) << " " << ((c >> 1) & 1) << endl;
-		inertia >>= (change << 1); // reset inertia to 0 when inertia reaches 3
+		cout << inertia << " " << change << " ";
+		inertia >>= (change << 1); // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
 		position += change;
 		cout << position << endl;
 	}
 
-	_itoa_s(((1 << 31) | -1), b, 2);
+	int f = 5 << 29;
+	_itoa_s(((unsigned)((1 << 31) & (2 - 0)) >> 31), b, 2);
 	cout << b << endl;
 
 	return 0;
