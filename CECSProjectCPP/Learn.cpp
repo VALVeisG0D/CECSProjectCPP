@@ -26,7 +26,7 @@ int main()
 	{
 		
 		inertia++;
-		change = ((unsigned)((1 << 31) & (2 - inertia)) >> 31);
+		change = (0xfff8 >> inertia) & 1;
 
 		cout << inertia << " " << change << " ";
 		inertia >>= (change << 1); // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
@@ -34,8 +34,7 @@ int main()
 		cout << position << endl;
 	}
 
-	int f = 5 << 29;
-	_itoa_s(((unsigned)((1 << 31) & (2 - 0)) >> 31), b, 2);
+	_itoa_s(((0xfff8 >> 7) & 1), b, 2);
 	cout << b << endl;
 
 	return 0;
