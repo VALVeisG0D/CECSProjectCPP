@@ -25,10 +25,9 @@ int main()
 	for (int i = 0; i < 12; ++i)
 	{
 		change = (0xfff8 >> inertia) & 1;
-
-		cout << inertia << " " << change << " " << (position += change) << endl;
-		inertia++;
-		inertia >>= (change << 2); // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
+		
+		cout << inertia++ << " " << change << " " << (position += change) << endl;
+		inertia -= change * 3; // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
 	}
 
 	_itoa_s(((0xfff8 >> 7) & 1), b, 2);
