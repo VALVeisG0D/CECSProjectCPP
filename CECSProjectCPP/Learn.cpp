@@ -18,7 +18,7 @@ int main()
 	_itoa_s(a, b, 2);
 	cout << b << endl << endl;
 	
-	int inertia = 0;
+	int inertia = 3;
 	int position = 0;
 	int change = 0;
 
@@ -26,7 +26,7 @@ int main()
 	{
 		change = (0xfff8 >> inertia) & 1;
 		
-		cout << inertia++ << " " << change << " " << (position += change) << endl;
+		cout << inertia << " " << change << " " << (position += change) << endl;
 		inertia -= change * 3; // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
 	}
 
