@@ -18,16 +18,17 @@ int main()
 	_itoa_s(a, b, 2);
 	cout << b << endl << endl;
 	
-	int inertia = 3;
+	int inertia = 1;
 	int position = 0;
 	int change = 0;
+	int temp = 0;
 
 	for (int i = 0; i < 12; ++i)
 	{
-		change = (0xfff8 >> inertia) & 1;
-		
-		cout << inertia << " " << change << " " << (position += change) << endl;
-		inertia -= change * 3; // reset inertia to 0 when inertia reaches 3 by shifting to the left by 2
+		change += inertia;
+		position += temp = (0xfff8 >> change) & 1;
+		cout << inertia << " " << change << " " << position << endl;
+		change -= temp * 3; // normalize the change when it crosses a threshold
 	}
 
 	_itoa_s(((0xfff8 >> 7) & 1), b, 2);
