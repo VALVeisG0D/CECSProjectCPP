@@ -18,7 +18,7 @@ int main()
 	_itoa_s(a, b, 2);
 	cout << b << endl << endl;
 
-	int inertia = 1;	//Range of values: -3 - +3
+	int inertia = -2;	//Range of values: -3 - +3
 	int position = 0;	//Range of values: -MAXINT - +MAXINT
 	int change = 0;		//Range of values: -6 - +6
 	int temp = 0;		//Range of values: -1 - +1
@@ -28,14 +28,13 @@ int main()
 	{
 		change += inertia;
 		offset = change + 3;
-		position += temp = (((int)0xffffffff) & (1 >> offset)) + ((0xff20 >> offset) & 1);
-		position += temp = (0xfff8 >> change) & 1; //need to work for negatives too
-		cout << inertia << " " << change << " " << position << endl;
+		position += temp = -(1 >> offset) + ((0xffc0 >> offset) & 1); //need to work for negatives too
+		cout << inertia << " " << change << " " << position << " " << temp << endl;
 		change -= temp * 3; // normalize the change when it crosses a threshold. need to work for negatives too
 	}
 
-	_itoa_s(-1, b, 2);
-	cout << 0xffffffff << endl;
+	_itoa_s(-(0xffc0 >> 0), b, 2);
+	cout << -(1 >> 0) << endl;
 
 	return 0;
 }
