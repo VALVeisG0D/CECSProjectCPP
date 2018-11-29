@@ -9,35 +9,238 @@
 
 using namespace std;
 
-int main()
+// Speed of light exists because the computer simulating our reality is not powerful enough to perform computation beyond that limit.
+
+constexpr auto DEFAULT_DIMENSION = 256;
+constexpr auto DEFAULT_NUMBER_OF_PARTICLES = 3;
+
+class Field
 {
-	int a = 8;
-	char b[44];
-	cout << sizeof(int) << " " << sizeof(float) << endl;
+	int(*field)[DEFAULT_DIMENSION];
 
-	_itoa_s(a, b, 2);
-	cout << b << endl << endl;
-
-	int inertia = 2;			//Range of values: -3 - +3
-	int position = 0;			//Range of values: -MAXINT - +MAXINT
-	int change = 0;				//Range of values: -3 - +3
-	int positivePart = 0;		//Range of values: -1 - +1
-	int negativePart = 0;		//Range of values: -1 - +1
-	int offset = 0;
-
-	for (int i = 0; i < 13; ++i)
+	struct Particle
 	{
-		change += inertia;
-		offset = change + 6;
-		positivePart = ((0xfe00 >> offset) & 1);
-		negativePart = ((0x000f >> offset) & 1);
-		position += positivePart - negativePart; //need to work for negatives too
-		cout << inertia << " " << change << " " << position << " " << offset << endl;
-		change += (negativePart + positivePart) * -change; // normalize the change when it crosses a threshold. need to work for negatives too
+		int xCoordinate;
+		int xInertia;
+		int xPositionChange;
+		int yCoordinate;
+		int yInertia;
+		int yPositionChange;
+	};
+
+	Particle* particleList;
+
+public:
+	Field();
+	~Field();
+
+	void AddParticle(int, int);
+	void RemoveParticle(int, int);
+	void UpdateParticlePosition();
+	float xFieldIndexToCoordinate(int);
+	float yFieldIndexToCoordinate(int);
+	size_t coordinateToFieldIndex(int);
+};
+
+Field::Field()
+{
+	// Create field array and particles
+	field = new int[DEFAULT_DIMENSION][DEFAULT_DIMENSION]();
+	particleList = new Particle[DEFAULT_NUMBER_OF_PARTICLES]();
+
+	// Create barrier along edge of field so that particles don't
+	// go out of bound
+
+	//	Top and bottom edge
+	for (int x = 0; x < DEFAULT_DIMENSION; ++x)
+		field[0][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
+
+	//	Left and right edge
+	for (int y = 1; y < DEFAULT_DIMENSION - 1; ++y)
+		field[y][0] = field[y][DEFAULT_DIMENSION - 1] = 1;
+
+	// Add particles
+	AddParticle(particleList[0].yCoordinate = coordinateToFieldIndex(0),
+		particleList[0].xCoordinate = coordinateToFieldIndex(-2));
+	AddParticle(particleList[1].yCoordinate = coordinateToFieldIndex(0),
+		particleList[1].xCoordinate = coordinateToFieldIndex(0));
+	AddParticle(particleList[2].yCoordinate = coordinateToFieldIndex(0),
+		particleList[2].xCoordinate = coordinateToFieldIndex(2));
+}
+
+Field::~Field()
+{
+	delete[] field;
+	delete[] particleList;
+}
+
+inline void Field::AddParticle(int yCoordinate, int xCoordinate)
+{
+	//convert coordinate value to index value
+	//what the hell value to give to that field coordinate
+	field[yCoordinate + 1][xCoordinate - 1] += 1;
+	field[yCoordinate + 1][xCoordinate] += 1;
+	field[yCoordinate + 1][xCoordinate + 1] += 1;
+
+	field[yCoordinate][xCoordinate - 1] += 1;
+	field[yCoordinate][xCoordinate] += 64;	//	Flaw in logic, what if two particles are heading towards each other?
+	field[yCoordinate][xCoordinate + 1] += 1;
+
+	field[yCoordinate - 1][xCoordinate - 1] += 1;
+	field[yCoordinate - 1][xCoordinate] += 1;
+	field[yCoordinate - 1][xCoordinate + 1] += 1;
+}
+
+inline void Field::RemoveParticle(int yCoordinate, int xCoordinate)
+{
+	field[yCoordinate + 1][xCoordinate - 1] -= 1;
+	field[yCoordinate + 1][xCoordinate] -= 1;
+	field[yCoordinate + 1][xCoordinate + 1] -= 1;
+
+	field[yCoordinate][xCoordinate - 1] -= 1;
+	field[yCoordinate][xCoordinate] -= 64;
+	field[yCoordinate][xCoordinate + 1] -= 1;
+
+	field[yCoordinate - 1][xCoordinate - 1] -= 1;
+	field[yCoordinate - 1][xCoordinate] -= 1;
+	field[yCoordinate - 1][xCoordinate + 1] -= 1;
+}
+
+inline void Field::UpdateParticlePosition()
+{
+	// 3 steps: calculate inertia, delete old position, add new position
+	for (size_t i = 0; i < DEFAULT_NUMBER_OF_PARTICLES; ++i)
+	{
+		//	Calculating the inertias on the diagonals
+		//	x-o-o
+		//	o-o-o
+		//	o-o-x
+		int tempInertiaDiag =
+			field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate - 1] -
+			field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate + 1];
+
+		particleList[i].xInertia += tempInertiaDiag;
+		particleList[i].yInertia -= tempInertiaDiag;
+
+		//	o-o-x
+		//	o-o-o
+		//	x-o-o
+		tempInertiaDiag =
+			field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate - 1] -
+			field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate + 1];
+
+		particleList[i].xInertia += tempInertiaDiag;
+		particleList[i].yInertia += tempInertiaDiag;
+
+		//	Calculating the inertia directly above, below, and to the side of the particle
+		//	o-o-o
+		//	x-o-x
+		//	o-o-o
+		particleList[i].xInertia +=
+			field[particleList[i].yCoordinate][particleList[i].xCoordinate - 1] -
+			field[particleList[i].yCoordinate][particleList[i].xCoordinate + 1];
+
+		//	o-x-o
+		//	o-o-o
+		//	o-x-o
+		particleList[i].yInertia +=
+			field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate] -
+			field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate];
+
+		//	Calculating the magnitude of the change in position due to inertia
+		//	Will be used to determine if particle moves by 1 unit
+		particleList[i].xPositionChange += particleList[i].xInertia;
+		particleList[i].yPositionChange += particleList[i].yInertia;
 	}
 
-	_itoa_s(8, b, 2);
-	cout << ((8 >> 3) & 1) << endl;
+	int negativePart = 0;
+	int positivePart = 0;
+	int offset = 0;
+
+	// Move the particle by removing from its old position and placing it at the new one
+	// What if they are at the same position? Then try not to put particles in the same position
+	for (size_t i = 0; i < DEFAULT_NUMBER_OF_PARTICLES; ++i)
+	{
+		RemoveParticle(particleList[i].yCoordinate, particleList[i].xCoordinate);
+
+		//	Logic for moving the particle by 1 unit only if the magnitude of the change in position
+		//	is large enough
+		offset = particleList[i].xPositionChange + 6;
+		positivePart = (0xfe00 >> offset) & 1;
+		negativePart = (0x000f >> offset) & 1;
+		particleList[i].xCoordinate += positivePart - negativePart;
+		particleList[i].xPositionChange +=
+			(negativePart + positivePart) * -particleList[i].xPositionChange;
+
+		offset = particleList[i].yPositionChange + 6;
+		positivePart = (0xfe00 >> offset) & 1;
+		negativePart = (0x000f >> offset) & 1;
+		particleList[i].yCoordinate += positivePart - negativePart;
+		particleList[i].yPositionChange +=
+			(negativePart + positivePart) * -particleList[i].yPositionChange;
+
+		AddParticle(particleList[i].yCoordinate, particleList[i].xCoordinate);
+	}
+}
+
+//	Convert from index to coordinate
+inline float Field::xFieldIndexToCoordinate(int particleListNumber)
+{
+	return (particleList[particleListNumber].xCoordinate - ((float)DEFAULT_DIMENSION / 2.0f)) * 0.01f;
+}
+
+inline float Field::yFieldIndexToCoordinate(int particleListNumber)
+{
+	return (particleList[particleListNumber].yCoordinate - ((float)DEFAULT_DIMENSION / 2.0f)) * 0.01f;
+}
+
+//	Convert from coordinate to index
+inline size_t Field::coordinateToFieldIndex(int coordinate)
+{
+	return size_t(coordinate) + (DEFAULT_DIMENSION / 2);
+}
+
+
+int main()
+{
+	//int a = 8;
+	//char b[44];
+	//cout << sizeof(int) << " " << sizeof(float) << endl;
+
+	//_itoa_s(a, b, 2);
+	//cout << b << endl << endl;
+
+	//int inertia = 2;			//Range of values: -3 - +3
+	//int position = 0;			//Range of values: -MAXINT - +MAXINT
+	//int change = 0;				//Range of values: -3 - +3
+	//int positivePart = 0;		//Range of values: -1 - +1
+	//int negativePart = 0;		//Range of values: -1 - +1
+	//int offset = 0;
+
+	//for (int i = 0; i < 13; ++i)
+	//{
+	//	change += inertia;
+	//	offset = change + 6;
+	//	positivePart = ((0xfe00 >> offset) & 1);
+	//	negativePart = ((0x000f >> offset) & 1);
+	//	position += positivePart - negativePart; //need to work for negatives too
+	//	cout << inertia << " " << change << " " << position << " " << offset << endl;
+	//	change += (negativePart + positivePart) * -change; // normalize the change when it crosses a threshold. need to work for negatives too
+	//}
+
+	//_itoa_s(8, b, 2);
+	//cout << ((8 >> 3) & 1) << endl;
+
+	Field field;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		field.UpdateParticlePosition();
+
+		cout << field.xFieldIndexToCoordinate(0) << " " << field.yFieldIndexToCoordinate(0) << endl;
+		cout << field.xFieldIndexToCoordinate(1) << " " << field.yFieldIndexToCoordinate(1) << endl;
+		cout << field.xFieldIndexToCoordinate(2) << " " << field.yFieldIndexToCoordinate(2) << endl << endl;
+	}
 
 	return 0;
 }
