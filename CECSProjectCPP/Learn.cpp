@@ -233,7 +233,7 @@ int main()
 
 	Field field;
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 128; ++i)
 	{
 		field.UpdateParticlePosition();
 
