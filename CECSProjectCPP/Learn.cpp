@@ -66,6 +66,8 @@ Field::Field()
 		particleList[1].xCoordinate = coordinateToFieldIndex(0));
 	AddParticle(particleList[2].yCoordinate = coordinateToFieldIndex(0),
 		particleList[2].xCoordinate = coordinateToFieldIndex(2));
+
+	particleList[1].xInertia = -1;
 }
 
 Field::~Field()
@@ -83,7 +85,7 @@ inline void Field::AddParticle(int yCoordinate, int xCoordinate)
 	field[yCoordinate + 1][xCoordinate + 1] += 1;
 
 	field[yCoordinate][xCoordinate - 1] += 1;
-	field[yCoordinate][xCoordinate] += 64;	//	Flaw in logic, what if two particles are heading towards each other?
+	field[yCoordinate][xCoordinate] += 1;	//	Flaw in logic, what if two particles are heading towards each other?
 	field[yCoordinate][xCoordinate + 1] += 1;
 
 	field[yCoordinate - 1][xCoordinate - 1] += 1;
@@ -98,7 +100,7 @@ inline void Field::RemoveParticle(int yCoordinate, int xCoordinate)
 	field[yCoordinate + 1][xCoordinate + 1] -= 1;
 
 	field[yCoordinate][xCoordinate - 1] -= 1;
-	field[yCoordinate][xCoordinate] -= 64;
+	field[yCoordinate][xCoordinate] -= 1;
 	field[yCoordinate][xCoordinate + 1] -= 1;
 
 	field[yCoordinate - 1][xCoordinate - 1] -= 1;
@@ -172,6 +174,9 @@ inline void Field::UpdateParticlePosition()
 		particleList[i].xPositionChange +=
 			(negativePart + positivePart) * -particleList[i].xPositionChange;
 
+		if (offset > 9)
+			cout << i << endl;
+
 		offset = particleList[i].yPositionChange + 6;
 		positivePart = (0xfe00 >> offset) & 1;
 		negativePart = (0x000f >> offset) & 1;
@@ -233,13 +238,10 @@ int main()
 
 	Field field;
 
-	for (int i = 0; i < 128; ++i)
+	while (true)//for (int i = 0; i < 65000; ++i)
 	{
 		field.UpdateParticlePosition();
 
-		cout << field.xFieldIndexToCoordinate(0) << " " << field.yFieldIndexToCoordinate(0) << endl;
-		cout << field.xFieldIndexToCoordinate(1) << " " << field.yFieldIndexToCoordinate(1) << endl;
-		cout << field.xFieldIndexToCoordinate(2) << " " << field.yFieldIndexToCoordinate(2) << endl << endl;
 	}
 
 	return 0;
