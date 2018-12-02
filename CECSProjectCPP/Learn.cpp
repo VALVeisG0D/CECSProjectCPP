@@ -113,7 +113,6 @@ inline void Field::UpdateParticlePosition()
 	// 3 steps: calculate inertia, delete old position, add new position
 	for (size_t i = 0; i < DEFAULT_NUMBER_OF_PARTICLES; ++i)
 	{
-		cout << particleList[i].xInertia << endl;
 		//	Calculating the inertias on the diagonals
 		//	x-o-o
 		//	o-o-o
@@ -154,18 +153,6 @@ inline void Field::UpdateParticlePosition()
 		//	Will be used to determine if particle moves by 1 unit
 		particleList[i].xPositionChange += particleList[i].xInertia;
 		particleList[i].yPositionChange += particleList[i].yInertia;	
-		
-		if (particleList[i].xInertia == 2)//(particleList[1].xCoordinate == particleList[0].xCoordinate)
-		{
-			cout << field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate - 1] -
-				field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate + 1] << " " << field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate - 1] -
-				field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate + 1] << " " << field[particleList[i].yCoordinate][particleList[i].xCoordinate - 1] -
-				field[particleList[i].yCoordinate][particleList[i].xCoordinate + 1] << endl << endl;
-
-			cout << i << endl;
-
-			while (true);
-		}
 	}
 
 	int negativePart = 0;
@@ -187,6 +174,7 @@ inline void Field::UpdateParticlePosition()
 		particleList[i].xPositionChange +=
 			(negativePart + positivePart) * -particleList[i].xPositionChange;
 
+		cout << particleList[i].xInertia << endl;
 	
 		offset = particleList[i].yPositionChange + 6;
 		positivePart = (0xfe00 >> offset) & 1;
