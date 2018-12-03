@@ -149,6 +149,8 @@ inline void Field::UpdateParticlePosition()
 			field[particleList[i].yCoordinate - 1][particleList[i].xCoordinate] -
 			field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate];
 
+		3 - (3 - (particleList[i].xInertia * (0x000f >> particleList[i].xInertia)));
+
 		//	Calculating the magnitude of the change in position due to inertia
 		//	Will be used to determine if particle moves by 1 unit
 		particleList[i].xPositionChange += particleList[i].xInertia;
@@ -173,8 +175,6 @@ inline void Field::UpdateParticlePosition()
 		particleList[i].xCoordinate += positivePart - negativePart;
 		particleList[i].xPositionChange +=
 			(negativePart + positivePart) * -particleList[i].xPositionChange;
-
-		cout << particleList[i].xInertia << endl;
 	
 		offset = particleList[i].yPositionChange + 6;
 		positivePart = (0xfe00 >> offset) & 1;
@@ -207,41 +207,23 @@ inline size_t Field::coordinateToFieldIndex(int coordinate)
 
 int main()
 {
-	//int a = 8;
-	//char b[44];
-	//cout << sizeof(int) << " " << sizeof(float) << endl;
+	char b[44];
 
-	//_itoa_s(a, b, 2);
-	//cout << b << endl << endl;
+	for (int i = 0; i < 13; ++i)
+	{
+		cout << (3 * ((0xfff0 >> i) & 1)) + (i * ((0x000f >> i) & 1)) << endl;
+	}
 
-	//int inertia = 2;			//Range of values: -3 - +3
-	//int position = 0;			//Range of values: -MAXINT - +MAXINT
-	//int change = 0;				//Range of values: -3 - +3
-	//int positivePart = 0;		//Range of values: -1 - +1
-	//int negativePart = 0;		//Range of values: -1 - +1
-	//int offset = 0;
-
-	//for (int i = 0; i < 13; ++i)
-	//{
-	//	change += inertia;
-	//	offset = change + 6;
-	//	positivePart = ((0xfe00 >> offset) & 1);
-	//	negativePart = ((0x000f >> offset) & 1);
-	//	position += positivePart - negativePart; //need to work for negatives too
-	//	cout << inertia << " " << change << " " << position << " " << offset << endl;
-	//	change += (negativePart + positivePart) * -change; // normalize the change when it crosses a threshold. need to work for negatives too
-	//}
-
-	//_itoa_s(8, b, 2);
-	//cout << ((8 >> 3) & 1) << endl;
+	_itoa_s(((0x000f) >> 4) & 1, b, 2);
+	cout << b << endl;
 
 	Field field;
 
-	while (true)//for (int i = 0; i < 65000; ++i)
-	{
-		field.UpdateParticlePosition();
+	//while (true)//for (int i = 0; i < 65000; ++i)
+	//{
+	//	field.UpdateParticlePosition();
 
-	}
+	//}
 
 	return 0;
 }
