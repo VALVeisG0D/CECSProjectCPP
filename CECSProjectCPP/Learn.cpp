@@ -53,11 +53,11 @@ Field::Field()
 
 	//	Top and bottom edge
 	for (int x = 0; x < DEFAULT_DIMENSION; ++x)
-		field[0][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
+		field[0][x] = field[1][x] = field[2][x] = field[DEFAULT_DIMENSION - 3][x] = field[DEFAULT_DIMENSION - 2][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
 
 	//	Left and right edge
-	for (int y = 1; y < DEFAULT_DIMENSION - 1; ++y)
-		field[y][0] = field[y][DEFAULT_DIMENSION - 1] = 1;
+	for (int y = 3; y < DEFAULT_DIMENSION - 3; ++y)
+		field[y][0] = field[y][1] = field[y][2] = field[y][DEFAULT_DIMENSION - 3] = field[y][DEFAULT_DIMENSION -2] = field[y][DEFAULT_DIMENSION - 1] = 1;
 
 	// Add particles
 	AddParticle(particleList[0].yCoordinate = coordinateToFieldIndex(0),
@@ -180,8 +180,6 @@ inline void Field::UpdateParticlePosition()
 		particleList[i].xCoordinate += positivePart - negativePart;
 		particleList[i].xPositionChange +=
 			(negativePart + positivePart) * -particleList[i].xPositionChange;
-
-		cout << particleList[i].xInertia << endl;
 	
 		offset = particleList[i].yPositionChange + 6;
 		positivePart = (0xfe00 >> offset) & 1;
@@ -191,6 +189,10 @@ inline void Field::UpdateParticlePosition()
 			(negativePart + positivePart) * -particleList[i].yPositionChange;
 
 		AddParticle(particleList[i].yCoordinate, particleList[i].xCoordinate);
+
+		//if (particleList[i].xCoordinate > (DEFAULT_DIMENSION - 1))
+		//cout << field[particleList[i].yCoordinate][particleList[i].xCoordinate] << "\n\n";
+		cout << particleList[i].xCoordinate << "\n\n";
 	}
 }
 
@@ -226,7 +228,7 @@ int main()
 
 	Field field;
 
-	while (true)//for (int i = 0; i < 65000; ++i)
+	while (true) //for (int i = 0; i < 200; ++i)
 	{
 		field.UpdateParticlePosition();
 
