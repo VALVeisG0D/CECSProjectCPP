@@ -53,11 +53,11 @@ Field::Field()
 
 	//	Top and bottom edge
 	for (int x = 0; x < DEFAULT_DIMENSION; ++x)
-		field[0][x] = field[1][x] = field[2][x] = field[DEFAULT_DIMENSION - 3][x] = field[DEFAULT_DIMENSION - 2][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
+		field[0][x] = field[1][x] = field[DEFAULT_DIMENSION - 2][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
 
 	//	Left and right edge
-	for (int y = 3; y < DEFAULT_DIMENSION - 3; ++y)
-		field[y][0] = field[y][1] = field[y][2] = field[y][DEFAULT_DIMENSION - 3] = field[y][DEFAULT_DIMENSION -2] = field[y][DEFAULT_DIMENSION - 1] = 1;
+	for (int y = 2; y < DEFAULT_DIMENSION - 2; ++y)
+		field[y][0] = field[y][1] = field[y][DEFAULT_DIMENSION -2] = field[y][DEFAULT_DIMENSION - 1] = 1;
 
 	// Add particles
 	AddParticle(particleList[0].yCoordinate = coordinateToFieldIndex(0),
@@ -150,10 +150,10 @@ inline void Field::UpdateParticlePosition()
 			field[particleList[i].yCoordinate + 1][particleList[i].xCoordinate];
 
 		particleList[i].xInertia = (3 * ((0xffe000 >> (particleList[i].xInertia + 10)) & 1)) 
-			+ (i * ((0x01f80 >> (particleList[i].xInertia + 10)) & 1)) 
+			+ (particleList[i].xInertia * ((0x01f80 >> (particleList[i].xInertia + 10)) & 1)) 
 			+ (-3 * ((0x0007f >> (particleList[i].xInertia + 10)) & 1));
 		particleList[i].yInertia = (3 * ((0xffe000 >> (particleList[i].yInertia + 10)) & 1))
-			+ (i * ((0x01f80 >> (particleList[i].yInertia + 10)) & 1))
+			+ (particleList[i].yInertia * ((0x01f80 >> (particleList[i].yInertia + 10)) & 1))
 			+ (-3 * ((0x0007f >> (particleList[i].yInertia + 10)) & 1));
 
 		//	Calculating the magnitude of the change in position due to inertia
@@ -190,8 +190,6 @@ inline void Field::UpdateParticlePosition()
 
 		AddParticle(particleList[i].yCoordinate, particleList[i].xCoordinate);
 
-		//if (particleList[i].xCoordinate > (DEFAULT_DIMENSION - 1))
-		//cout << field[particleList[i].yCoordinate][particleList[i].xCoordinate] << "\n\n";
 		cout << particleList[i].xCoordinate << "\n\n";
 	}
 }
@@ -228,7 +226,7 @@ int main()
 
 	Field field;
 
-	while (true) //for (int i = 0; i < 200; ++i)
+	for (int i = 0; i < 150; ++i)
 	{
 		field.UpdateParticlePosition();
 
