@@ -226,7 +226,7 @@ int main()
 
 	Field field;
 
-	for (int i = 0; i < 150; ++i)
+	while (true)//for (int i = 0; i < 150; ++i)
 	{
 		field.UpdateParticlePosition();
 
