@@ -53,11 +53,11 @@ Field::Field()
 
 	//	Top and bottom edge
 	for (int x = 0; x < DEFAULT_DIMENSION; ++x)
-		field[0][x] = field[1][x] = field[DEFAULT_DIMENSION - 2][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
+		field[0][x] = field[DEFAULT_DIMENSION - 1][x] = 1;
 
 	//	Left and right edge
-	for (int y = 2; y < DEFAULT_DIMENSION - 2; ++y)
-		field[y][0] = field[y][1] = field[y][DEFAULT_DIMENSION -2] = field[y][DEFAULT_DIMENSION - 1] = 1;
+	for (int y = 1; y < DEFAULT_DIMENSION - 1; ++y)
+		field[y][0] = field[y][DEFAULT_DIMENSION - 1] = 1;
 
 	// Add particles
 	AddParticle(particleList[0].yCoordinate = coordinateToFieldIndex(0),
