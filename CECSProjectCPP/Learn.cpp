@@ -66,8 +66,6 @@ Field::Field()
 		particleList[1].xCoordinate = coordinateToFieldIndex(0));
 	AddParticle(particleList[2].yCoordinate = coordinateToFieldIndex(0),
 		particleList[2].xCoordinate = coordinateToFieldIndex(2));
-
-	particleList[1].xInertia = -1;
 }
 
 Field::~Field()
@@ -216,13 +214,18 @@ int main()
 {
 	char b[44];
 
-	for (int i = -10; i < 10; ++i)
-	{
-		//cout << (3 * ((0xffe000 >> (i + 10)) & 1)) + (i * ((0x01f80 >> (i + 10)) & 1)) + (-3 * ((0x0007f >> (i + 10)) & 1)) << endl;
-	}
-
 	_itoa_s(((0x000f) >> 4) & 1, b, 2);
 	cout << b << endl;
+
+	{
+		int* memPool = new int[10]();
+
+		//allocate(prog, size);
+		int* progA = &memPool[3];
+		int* progB = &memPool[6];
+
+		delete[] memPool;
+	}
 
 	Field field;
 
