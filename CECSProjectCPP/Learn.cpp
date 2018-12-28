@@ -187,8 +187,6 @@ inline void Field::UpdateParticlePosition()
 			(negativePart + positivePart) * -particleList[i].yPositionChange;
 
 		AddParticle(particleList[i].yCoordinate, particleList[i].xCoordinate);
-
-		cout << particleList[i].xCoordinate << "\n\n";
 	}
 }
 
@@ -223,8 +221,10 @@ int main()
 		//allocate(prog, size);
 		int* progA = &memPool[3];
 		int* progB = &memPool[6];
-
+cout << *progA << endl;
 		delete[] memPool;
+		cout << *progA << endl;
+		
 	}
 
 	Field field;
