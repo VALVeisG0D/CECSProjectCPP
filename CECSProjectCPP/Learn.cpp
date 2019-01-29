@@ -227,13 +227,22 @@ cout << *progA << endl;
 		
 	}
 
-	Field field;
+	int x = 0;
+	int q = 0;
+	for (int y = -18; y < 18; ++y)
+	{ 
+		x = y;
+		int temp = ((long long)9 * ((0xff0000000 >> (x + 18)) & 1));	
+		x = temp
+		+ ((long long)x * ((0xffffe00 >> (x + 18)) & 1))
+		+ ((long long)-9 * ((0x001ff >> (x + 18)) & 1));
 
-	while (true)//for (int i = 0; i < 150; ++i)
-	{
-		field.UpdateParticlePosition();
-
+		cout << x << " " << ++q << endl;
 	}
+
+	long long aa = 0xff0000000;
+	for (int a = 0; a < 36; ++a)
+		cout << (aa >>= 1) << " " << a << endl;
 
 	return 0;
 }
