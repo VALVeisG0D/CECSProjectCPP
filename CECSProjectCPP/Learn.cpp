@@ -221,9 +221,9 @@ int main()
 		//allocate(prog, size);
 		int* progA = &memPool[3];
 		int* progB = &memPool[6];
-cout << *progA << endl;
-		delete[] memPool;
 		cout << *progA << endl;
+		delete[] memPool;
+		cout << *progA << endl << endl;
 		
 	}
 
@@ -232,17 +232,25 @@ cout << *progA << endl;
 	for (int y = -18; y < 18; ++y)
 	{ 
 		x = y;
-		int temp = ((long long)9 * ((0xff0000000 >> (x + 18)) & 1));	
-		x = temp
-		+ ((long long)x * ((0xffffe00 >> (x + 18)) & 1))
-		+ ((long long)-9 * ((0x001ff >> (x + 18)) & 1));
+		x = (9 * ((0x7FFFF00000000000 >> (x + 34)) & 1))
+		+ (x * ((0xFFFFE000000 >> (x + 34)) & 1))
+		+ (-9 * ((static_cast<long long>(0x1FFFFFF) >> (x + 34)) & 1));
 
 		cout << x << " " << ++q << endl;
 	}
 
-	long long aa = 0xff0000000;
-	for (int a = 0; a < 36; ++a)
-		cout << (aa >>= 1) << " " << a << endl;
+	cout << endl;
+
+	 long long g = 0xF000000FF0000000;
+
+	for (int i = 0; i < 70; ++i)
+	{
+		cout << ((g = g >> 1) & 1) << endl;
+	}
+
+	cout << sizeof((9 * ((0x7FFFF00000000000 >> (x + 34)) & 1))
+		+ (x * ((0xFFFFE000000 >> (x + 34)) & 1))
+		+ (-9 * ((0x1FFFFFF >> (x + 34)) & 1))) << endl;
 
 	return 0;
 }
