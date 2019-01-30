@@ -241,16 +241,10 @@ int main()
 
 	cout << endl;
 
-	 long long g = 0xF000000FF0000000;
-
-	for (int i = 0; i < 70; ++i)
-	{
-		cout << ((g = g >> 1) & 1) << endl;
-	}
-
-	cout << sizeof((9 * ((0x7FFFF00000000000 >> (x + 34)) & 1))
+	for (x = -18; x < 18; ++x)
+	cout << (-9 * (((long long)0x1FFFFFF >> (x + 34)) & 1))
 		+ (x * ((0xFFFFE000000 >> (x + 34)) & 1))
-		+ (-9 * ((0x1FFFFFF >> (x + 34)) & 1))) << endl;
+		+ (9 * ((0x7FFFF00000000000 >> (x + 34)) & 1)) << endl;
 
 	return 0;
 }
