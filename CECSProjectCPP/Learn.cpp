@@ -242,9 +242,19 @@ int main()
 	cout << endl;
 
 	for (x = -18; x < 18; ++x)
-	cout << (-9 * (((long long)0x1FFFFFF >> (x + 34)) & 1))
-		+ (x * ((0xFFFFE000000 >> (x + 34)) & 1))
-		+ (9 * ((0x7FFFF00000000000 >> (x + 34)) & 1)) << endl;
+	cout << (9 * ((0x7FFFF00000000000 >> (x + 34)) & 1))
+		+ (-9 * ((0x1FFFFFF >> (x + 34)) & 1)) << " " << x + 19 << endl;
+
+	for (x = -18; x < 18; ++x)
+		cout << (9 * (x > 8))
+		+ (x * ((x < 9) && (x > -10)))
+		+ (-9 * (x < -9)) << " " << x + 19 << endl;
+
+	cout << endl;
+
+	for (x = 0; x < 62; ++x)
+	cout << (5 * ((0x7FFFF00000000000 >> (x)) & 1))
+		+ (2 * ((0x1FFFFFF >> (x)) & 1)) << endl;
 
 	return 0;
 }
