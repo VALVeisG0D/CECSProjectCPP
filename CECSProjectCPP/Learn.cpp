@@ -249,11 +249,9 @@ int main()
 
 	cout << endl;
 
-	for (x = 0; x < 62; ++x)
-	cout << (5 * ((0x7FFFF00000000000 >> (x)) & 1))
-		+ (2 * ((0x1FFFFFF >> (x)) & 1)) << endl;
-
-	cout << ~-1 << endl;
+	for (x = 0; x < 63; ++x)
+	cout << (5 * ((0xF00000000 >> x) & 1))
+		+ (2 * ((0xF >> x) & 1)) << " " << x << endl;
 
 	return 0;
 }
