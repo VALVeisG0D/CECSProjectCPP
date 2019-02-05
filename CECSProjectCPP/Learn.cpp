@@ -249,12 +249,6 @@ int main()
 
 	cout << endl;
 
-	for (x = 0; x < 63; ++x)
-	cout << (5 * ((0x1F80000000 >> x) & 1))
-		+ (2 * ((0xF >> x) & 1)) << " " << x << endl;
-
-	cout << endl;
-
 	for (x = 0; x < 111; ++x)
 		cout << (5 * ((0xF0 >> x) & 1))
 		+ (2 * ((0xF >> x) & 1)) << " " << x << endl;
