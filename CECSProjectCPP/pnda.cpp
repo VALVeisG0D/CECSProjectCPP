@@ -28,6 +28,7 @@ public:
     // Push worker onto freeWorkQueue when work is finish
     void DistributeWork(int workerIdentifier)
     {
+        // Initially want to get all the workers into the busy work queue
         while (!freeWorkQueue.empty)
         {
             busyWorkQueue.push(freeWorkQueue.front);
