@@ -10,27 +10,28 @@ class CommandUnit
         int work;
     };
 
-    WorkUnit workGroup[64];
-    queue<WorkUnit> workQueue;
+    queue<WorkUnit> freeWorkQueue;
+    queue<WorkUnit> busyWorkQueue;
 
-    public:
-    void InitializeWorkQueueWithWorkUnit()
+public:
+    void InitializeWorkQueue()
     {
         for (int i = 0; i < 64; ++i)
         {
-            workQueue.push(workGroup[i]);
+            freeWorkQueue.push(WorkUnit());
         }
     }
 
+    // Pop worker off freeWorkQueue
+    // Push worker onto busyWorkQueue
+    // Pop worker off busyWorkQueue when work is finish
+    // Push worker onto freeWorkQueue when work is finish
     void DistributeWork(int workerIdentifier)
     {
-        while (true)
+        while (!freeWorkQueue.empty)
         {
-            for (int i = 0; i < 64; ++i)
-            {
-                workQueue.front;
-                workQueue.pop();
-            }
+            busyWorkQueue.push(freeWorkQueue.front);
+            freeWorkQueue.pop();
         }
     }
 };
@@ -44,6 +45,6 @@ int main()
         int b = 4;
         int c = a + b + 44;
     }
-    
+
     return 0;
 }
