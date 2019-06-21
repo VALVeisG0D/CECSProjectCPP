@@ -7,38 +7,48 @@ class CommandUnit
 {
     struct WorkUnit
     {
-        int work;
+        bool workDone = false;
+
+        int DoWork(int work)
+        {
+            return work + 1;
+        }
+
+        bool WorkDone()
+        {
+            return true;
+        }
     };
 
-    queue<WorkUnit> freeWorkQueue;
-    queue<WorkUnit> busyWorkQueue;
+    // The work queue will be dedicated to a single piece of work
+    // Work is not done unless all work unit report back that it
+    // is done working.
+    queue<WorkUnit> workQueue;
 
 public:
     void InitializeWorkQueue()
     {
         for (int i = 0; i < 64; ++i)
         {
-            freeWorkQueue.push(WorkUnit());
+            workQueue.push(WorkUnit());
+            WorkUnit currentWork = workQueue.back();
+            currentWork.DoWork(i);
         }
     }
 
-    // Pop worker off freeWorkQueue
-    // Push worker onto busyWorkQueue
-    // Pop worker off busyWorkQueue when work is finish
-    // Push worker onto freeWorkQueue when work is finish
-    void DistributeWorkInitial()
+    void WaitForWorkDone()
     {
-        // Initially want to get all the workers into the busy work queue
-        while (!freeWorkQueue.empty())
+        
+        while (!workQueue.empty())
         {
-            busyWorkQueue.push(freeWorkQueue.front());
-            freeWorkQueue.pop();
+            // Wait for work units to report back when it is done
+            // with its work.
+
+            for (int i = 0; i < 64; ++i)
+            {
+                if ()
+            }   
         }
-    }
-
-    void DistributeWorkStable(int workerIdentifier)
-    {
-
     }
 };
 
