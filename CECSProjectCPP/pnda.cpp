@@ -26,14 +26,19 @@ public:
     // Push worker onto busyWorkQueue
     // Pop worker off busyWorkQueue when work is finish
     // Push worker onto freeWorkQueue when work is finish
-    void DistributeWork(int workerIdentifier)
+    void DistributeWorkInitial()
     {
         // Initially want to get all the workers into the busy work queue
-        while (!freeWorkQueue.empty)
+        while (!freeWorkQueue.empty())
         {
-            busyWorkQueue.push(freeWorkQueue.front);
+            busyWorkQueue.push(freeWorkQueue.front());
             freeWorkQueue.pop();
         }
+    }
+
+    void DistributeWorkStable(int workerIdentifier)
+    {
+
     }
 };
 
@@ -47,5 +52,15 @@ int main()
         int c = a + b + 44;
     }
 
+    queue<int> intQ;
+
+    for (int i = 0; i < 64; ++i)
+    intQ.push(i);
+
+    for (int i = 0; i < 64; ++i)
+    {
+    cout << intQ.front() << endl;
+    intQ.pop();
+    }
     return 0;
 }
