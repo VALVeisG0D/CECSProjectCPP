@@ -43,10 +43,17 @@ public:
         {
             // Wait for work units to report back when it is done
             // with its work.
-
             for (int i = 0; i < 64; ++i)
             {
-                if ()
+                WorkUnit tempUnit = workQueue.front();
+
+                // If work is done, place the worker in front of queue
+                // to the back of the queue.
+                if (tempUnit.WorkDone())
+                {
+                    workQueue.pop();
+                    workQueue.push(tempUnit);
+                }
             }   
         }
     }
