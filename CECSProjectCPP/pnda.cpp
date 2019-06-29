@@ -5,18 +5,25 @@ using namespace std;
 
 class CommandUnit
 {
+    // Blueprint for a work unit
+    // Receive work, do work, result work done.
     struct WorkUnit
     {
         bool workDone = false;
+        int uniqueWork = 0;
 
         int DoWork(int work)
         {
-            return work + 1;
+            workDone = false;
+            uniqueWork = work + 5;
+            workDone = true;
+
+            return uniqueWork;
         }
 
-        bool WorkDone()
+        bool IsWorkDone()
         {
-            return true;
+            return workDone;
         }
     };
 
@@ -24,38 +31,44 @@ class CommandUnit
     // Work is not done unless all work unit report back that it
     // is done working.
     queue<WorkUnit> workQueue;
+    int workResult[64];
 
 public:
+
+    // Worker is put on the queue and given work.
+    // Worker will give result of work back when done and signal
+    // the command unit.
     void InitializeWorkQueue()
     {
         for (int i = 0; i < 64; ++i)
         {
             workQueue.push(WorkUnit());
-            WorkUnit currentWork = workQueue.back();
-            currentWork.DoWork(i);
+            WorkUnit currentWorker = workQueue.back();
+            workResult[i] = currentWorker.DoWork(i);
         }
     }
 
     void WaitForWorkDone()
     {
-        
-        while (!workQueue.empty())
+        // Wait for work units to report back when it is done
+        // with its work.
+        for (int i = 0; i < 64; ++i)
         {
-            // Wait for work units to report back when it is done
-            // with its work.
-            for (int i = 0; i < 64; ++i)
-            {
-                WorkUnit tempUnit = workQueue.front();
+            WorkUnit tempUnit = workQueue.front();
 
-                // If work is done, place the worker in front of queue
-                // to the back of the queue.
-                if (tempUnit.WorkDone())
-                {
-                    workQueue.pop();
-                    workQueue.push(tempUnit);
-                }
-            }   
+            // If work is done, place the worker in front of queue
+            // to the back of the queue.
+            if (tempUnit.IsWorkDone())
+            {
+                workQueue.pop();
+                workQueue.push(tempUnit);
+            }
         }
+
+        cout << "Work done" << endl;
+
+        for (int i = 0; i < 64; ++i)
+            cout << workResult[i] << endl;
     }
 };
 
@@ -63,21 +76,16 @@ int main()
 {
     cout << "PNDA" << endl;
 
+    CommandUnit cmu;
+
+    cmu.InitializeWorkQueue();
+    cmu.WaitForWorkDone();
+
     {
         int a = 3;
         int b = 4;
         int c = a + b + 44;
     }
 
-    queue<int> intQ;
-
-    for (int i = 0; i < 64; ++i)
-    intQ.push(i);
-
-    for (int i = 0; i < 64; ++i)
-    {
-    cout << intQ.front() << endl;
-    intQ.pop();
-    }
     return 0;
 }
