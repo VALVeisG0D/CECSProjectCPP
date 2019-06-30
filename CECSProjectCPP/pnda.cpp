@@ -3,14 +3,23 @@
 
 using namespace std;
 
+// Put severe restrictions on this design first. This will be an 8-bit add only machine. 
+// No other operations!
+// What do we need to design and build a completely new computing architecture?
+// Instruction set, circuit design, 
+// How to solve the conditional statements and alphabet/string statements problem in this architecture?
+// Addresses are just integers.
 class CommandUnit
 {
     // Blueprint for a work unit
-    // Receive work, do work, result work done.
+    // Receive work, do work, work done.
+    // Each work unit will have an instruction pointer that tracks which part of the program 
+    // it will work on.
     struct WorkUnit
     {
         bool workDone = false;
         int uniqueWork = 0;
+        long IP;
 
         int DoWork(int work)
         {
@@ -37,14 +46,13 @@ public:
 
     // Worker is put on the queue and given work.
     // Worker will give result of work back when done and signal
-    // the command unit.
+    // the command unit that it is free for more work.
     void InitializeWorkQueue()
     {
         for (int i = 0; i < 64; ++i)
         {
             workQueue.push(WorkUnit());
-            WorkUnit currentWorker = workQueue.back();
-            workResult[i] = currentWorker.DoWork(i);
+            workResult[i] = workQueue.back().DoWork(i);
         }
     }
 
@@ -56,8 +64,7 @@ public:
         {
             WorkUnit tempUnit = workQueue.front();
 
-            // If work is done, place the worker in front of queue
-            // to the back of the queue.
+            // If work is done, move worker in front to the back
             if (tempUnit.IsWorkDone())
             {
                 workQueue.pop();
